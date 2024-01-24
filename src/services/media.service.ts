@@ -1,0 +1,47 @@
+import { TokenPayLoad } from '~/models/request/User.request'
+import { databaseService } from './databases.service'
+import { Request } from 'express'
+import sharp from 'sharp'
+import { getName, uploadFile, upload_dir } from '~/utills/file'
+import { ObjectId } from 'mongodb'
+import fs from 'fs'
+import { BlobServiceClient } from '@azure/storage-blob';
+// import multer from 'multer'
+
+// Thiết lập Azure Blob Storage
+const connectionString = "DefaultEndpointsProtocol=https;AccountName=jouneyjoy;AccountKey=QAfATyMxFDMEHtFtkHM3AiBWT7FI28Y+BJTfG3e6om6asiosJ6Ham9yCln6pDrxbQTDTD1KyLrKq+AStAAo0pw==;EndpointSuffix=core.windows.net";
+const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+const containerName = "image";
+const containerClient = blobServiceClient.getContainerClient(containerName);
+// Thiết lập Multer để xử lý upload file
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage: storage });
+class MediaService {
+  async handleUploadFile(req: Request) {
+    // const { user_id } = req.decoded_access_token as TokenPayLoad
+
+    const files = await uploadFile(req)
+    const total = files.map(async (file) => {
+      const newName = getName(file.newFilename)
+      sharp.cache({ files: 0 })
+      // await sharp(file.filepath).jpeg().toFile(`${upload_dir}/${newName}.jpg`)
+      const imageBuffer = await sharp(file.filepath).toBuffer();
+      const blockBlobClient = containerClient.getBlockBlobClient(`${newName}.jpg`);
+      await blockBlobClient.upload(imageBuffer, file.size);
+
+      const fileUrl = blockBlobClient.url;
+      databaseService.medias.insertOne({
+        url: newName
+      })
+
+      return {
+        url: fileUrl,
+        name: newName
+      }
+    })
+    const result = await Promise.all(total)
+    return result
+  }
+}
+
+export const mediaServices = new MediaService()
