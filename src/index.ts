@@ -18,7 +18,7 @@ import Conversation from './models/schemas/Conversation.schema'
 import conversationsRouter from './routes/conversation.route'
 const app = express()
 const httpServer = createServer(app)
-const port = 8080
+const port = process.env.PORT || 8080
 databaseService.connect().catch(console.dir)
 app.use(
   cors({
@@ -37,6 +37,10 @@ app.use('/review', reviewRouter)
 app.use('/conversations', conversationsRouter)
 app.use('/static', express.static(upload_dir))
 // app.use('/invoices', invoiceRoute)
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
 initFolder()
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof ErrorWithMessage) {

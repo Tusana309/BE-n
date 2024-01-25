@@ -13,8 +13,10 @@ interface BookingType {
   code: string
   timeOrder?: number
   timeBack?: number
+  numberRoom?: number
   status?: HotelStatus
   auto_drive?: boolean
+  seater?: string
   location?: string
   tour_day?: number
   amount_human?: number
@@ -33,8 +35,10 @@ export class Booking {
   date_pick: number
   status: HotelStatus
   auto_drive: boolean
+  seater: string
   timeOrder: number
   timeBack: number
+  numberRoom?: number
   location: string
   tour_day: number
   name: string
@@ -54,11 +58,13 @@ export class Booking {
     this.date_pick = booking.date_pick
     this.timeOrder = booking.timeOrder || 0
     this.timeBack = booking.timeBack || 0
+    this.numberRoom = booking.numberRoom || 0
     this.name = booking.name || ''
     this.location = booking.location || ''
     this.tour_day = booking.tour_day || 0
     this.amount_human = booking.amount_human || 0
     this.auto_drive = booking.auto_drive || false
+    this.seater = booking.seater || '0'
     this.status = HotelStatus.default
     this.created_at = booking.created_at || new Date()
     this.updated_at = booking.updated_at || new Date()
