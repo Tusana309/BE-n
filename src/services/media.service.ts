@@ -9,7 +9,7 @@ import { BlobServiceClient } from '@azure/storage-blob';
 // import multer from 'multer'
 
 // Thiết lập Azure Blob Storage
-const connectionString = "DefaultEndpointsProtocol=https;AccountName=jouneyjoy;AccountKey=QAfATyMxFDMEHtFtkHM3AiBWT7FI28Y+BJTfG3e6om6asiosJ6Ham9yCln6pDrxbQTDTD1KyLrKq+AStAAo0pw==;EndpointSuffix=core.windows.net";
+const connectionString = "DefaultEndpointsProtocol=https;AccountName=imagejoy;AccountKey=Cp7+SgO57eITJ+hgYDqTTduYO08KR/tr9jWYpXH56o6wjXsYE3peniS5BxQi9bXN3cQ8PH2dpXyg+ASt8mdilg==;EndpointSuffix=core.windows.net";
 const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 const containerName = "image";
 const containerClient = blobServiceClient.getContainerClient(containerName);
